@@ -1,84 +1,81 @@
+
 let flights = [];
 
-document.getElementById("addBtn").addEventListener("click", () => {
-  const destination = document.getElementById("destination").value;
-  const duration = document.getElementById("duration").value;
-  const weekend = document.getElementById("weekend").checked;
-  const bonus = parseInt(document.getElementById("bonus").value);
-  const flightCount = parseInt(document.getElementById("flights").value);
+function addFlight() {
+    const destination = document.getElementById('destination').value;
+    const numFlights = parseInt(document.getElementById('flights').value);
+    const duration = document.getElementById('duration').value;
+    const weekend = document.getElementById('weekend').checked;
+    const bonus = parseInt(document.getElementById('bonus').value);
 
-  if (!destination || !flightCount || (destination !== "Long Layover in Europe" && !duration)) {
-    alert("Please fill in all required fields.");
-    return;
-  }
+    if (!destination || !numFlights || !duration) return;
 
-  const finalDuration = destination === "Long Layover in Europe" ? "70" : duration;
+    // Automatischer Wert bei "Long Layover in Europe"
+    const finalDuration = destination === "Long Layover in Europe" ? "70" : duration;
 
-  const flight = {
-    destination,
-    flights: flightCount,
-    duration: finalDuration,
-    weekend,
-    bonus
-  };
+    const flight = {
+        destination,
+        numFlights,
+        duration: finalDuration,
+        weekend,
+        bonus
+    };
 
-  flights.push(flight);
-  updateFlights();
-  updateResults();
-  clearInputs();
-});
+    flights.push(flight);
+    renderFlights();
+    renderResult();
 
-document.getElementById("clearBtn").addEventListener("click", () => {
-  flights = [];
-  updateFlights();
-  updateResults();
-});
-
-function updateFlights() {
-  const list = document.getElementById("flightList");
-  list.innerHTML = "";
-  flights.forEach((f, index) => {
-    const item = document.createElement("div");
-    item.className = "flight";
-    item.innerHTML = `
-      <strong>${f.destination}</strong><br>
-      ${f.flights} flights, ${f.duration}h<br>
-      ${f.weekend ? "Weekend" : "All Days"}, Bonus: ${f.bonus}<br>
-      <button class="removeBtn" onclick="removeFlight(${index})">Remove</button>
-    `;
-    list.appendChild(item);
-  });
-}
-
-function updateResults() {
-  const results = {};
-  flights.forEach((f) => {
-    const score = f.bonus;
-    const summary = `${f.destination}, ${f.flights} flights, ${f.duration}h, ${f.weekend ? "Weekend" : "All Days"}, Bonus: ${f.bonus}`;
-    if (!results[score]) results[score] = new Set();
-    results[score].add(summary);
-  });
-
-  const resultDiv = document.getElementById("result");
-  resultDiv.innerHTML = "<h3>Result</h3><ul>" + 
-    [100,90,80,70,60,50,40,30,20,10].map(score => {
-      const entries = results[score];
-      const content = entries ? Array.from(entries).join(" | ") : "–";
-      return `<li><strong>${score}</strong>: ${content}</li>`;
-    }).join("") +
-    "</ul>";
+    // Reset
+    document.getElementById('destination').value = "";
+    document.getElementById('flights').value = "";
+    document.getElementById('duration').value = "";
+    document.getElementById('weekend').checked = false;
+    document.getElementById('bonus').value = "0";
 }
 
 function removeFlight(index) {
-  flights.splice(index, 1);
-  updateFlights();
-  updateResults();
+    flights.splice(index, 1);
+    renderFlights();
+    renderResult();
 }
 
-function clearInputs() {
-  document.getElementById("destination").value = "";
-  document.getElementById("duration").value = "";
-  document.getElementById("weekend").checked = false;
-  document.getElementById("bonus").value = "0";
-  document.getElementById("flights").value = "";
+function clearAll() {
+    flights = [];
+    renderFlights();
+    renderResult();
+}
+
+function renderFlights() {
+    const container = document.getElementById('flights-list');
+    container.innerHTML = '';
+    flights.forEach((f, i) => {
+        const div = document.createElement('div');
+        div.className = 'flight-card';
+        div.innerHTML = `<strong>${f.destination}</strong><br>
+            ${f.numFlights} flights, ${f.duration}h<br>
+            ${f.weekend ? 'Weekend' : 'All Days'}, Bonus: ${f.bonus}<br>
+            <button class="remove" onclick="removeFlight(${i})">Remove</button>`;
+        container.appendChild(div);
+    });
+}
+
+function renderResult() {
+    const result = {};
+    for (let i = 10; i <= 100; i += 10) result[i] = [];
+
+    const keys = [...new Set(flights.map(JSON.stringify))].map(JSON.parse);
+
+    keys.forEach(flight => {
+        const score = Math.min(100, Math.floor(flight.numFlights + flight.bonus));
+        const rounded = Math.ceil(score / 10) * 10;
+        result[rounded].push(`${flight.destination}, ${flight.numFlights} flights, ${flight.duration}h, ${flight.weekend ? 'Weekend' : 'All Days'}, Bonus: ${flight.bonus}`);
+    });
+
+    const ul = document.getElementById('result-list');
+    ul.innerHTML = '';
+    for (let i = 100; i >= 10; i -= 10) {
+        const li = document.createElement('li');
+        li.innerHTML = `<strong>${i}:</strong> ${result[i].join(' | ') || '–'}`;
+        ul.appendChild(li);
+    }
 }

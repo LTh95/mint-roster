@@ -120,7 +120,7 @@
     const flights = [];
 
     function addFlight() {
-      const destination = document.getElementById("destination").value;
+      let destination = document.getElementById("destination").value;
       const flightsCount = parseInt(document.getElementById("flights").value);
       const duration = document.getElementById("duration").value;
       const weekend = document.getElementById("weekend").checked;
@@ -165,7 +165,7 @@
         li.innerHTML = `
           <strong>${f.destination}</strong><br/>
           ${f.flights} flights, ${f.duration}h<br/>
-          ${f.weekend ? "Weekend" : "Weekday"}, ${f.highpay ? "High Pay" : "Normal"}, Bonus: ${f.bonus}
+          ${f.weekend ? "Weekend" : "all days"}, ${f.highpay ? "High Pay" : "Normal"}, Bonus: ${f.bonus}
           <button onclick="removeFlight(${index})">✖</button>
         `;
         flightList.appendChild(li);
@@ -220,7 +220,7 @@
 
         if (resultsByScore[s]) {
           li.innerHTML += resultsByScore[s].map(f => 
-            `${f.destination} – ${f.flights} flights, ${f.duration}h, ${f.weekend ? "Weekend" : "Weekday"}, Bonus: ${f.bonus}`
+            `${f.destination} – ${f.flights} flights, ${f.duration}h, ${f.weekend ? "Weekend" : "all days"}, Bonus: ${f.bonus}`
           ).join("<br/>");
         } else {
           li.innerHTML += "–";

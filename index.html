@@ -1,159 +1,214 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roaster4Mint</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            padding: 20px;
-            background-color: #f8f9fa;
-        }
-        .container {
-            max-width: 600px;
-            margin: auto;
-        }
-        h1 {
-            text-align: center;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-        .card {
-            margin-top: 10px;
-        }
-        .result-list {
-            margin-top: 20px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Roaster4Mint</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f1f9f6;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #1f2937;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+    select, input[type="number"] {
+      width: 100%;
+      padding: 8px;
+      margin-top: 4px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    button {
+      padding: 10px 16px;
+      margin-top: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .add {
+      background-color: #047857;
+      color: white;
+      margin-right: 10px;
+    }
+    .clear {
+      background-color: #6b7280;
+      color: white;
+    }
+    .flight {
+      background-color: #f3f4f6;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 8px;
+    }
+    .remove {
+      background-color: #dc2626;
+      color: white;
+      width: 100%;
+      border: none;
+      padding: 8px;
+      margin-top: 10px;
+      border-radius: 8px;
+    }
+    .result {
+      margin-top: 30px;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Roaster4Mint</h1>
-        <div class="card p-4 shadow-sm">
-            <div class="mb-3">
-                <label for="destination" class="form-label">Destination:</label>
-                <select id="destination" class="form-select"><option value="">Select destination</option>
-                    <option>Munich</option>
-                    <option>Düsseldorf</option>
-                    <option>Frankfurt</option>
-                    <option>London</option>
-                    <option>Manchester</option>
-                    <option>Lissabon</option>
-                    <option>Kopenhagen</option>
-                    <option>Madrid</option>
-                    <option>Barcelona</option>
-                    <option>Wien</option>
-                    <option>Zürich</option>
-                    <option>Paris</option>
-                    <option>Asien</option>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="flights" class="form-label">Flights:</label>
-                <input type="number" id="flights" class="form-control">
-            </div>
-            <div class="mb-3">
-                <label for="duration" class="form-label">Duration:</label>
-                <select id="duration" class="form-select"><option value="">Select duration</option>
-                    <option>24</option>
-                    <option>48</option>
-                    <option>50</option>
-                    <option>70</option>
-                    <option>24 bis 48</option>
-                    <option>48 bis 70</option>
-                </select>
-            </div>
-            <div class="mb-3 form-check">
-                <input type="checkbox" class="form-check-input" id="weekend">
-                <label class="form-check-label" for="weekend">Weekend Flight</label>
-            </div>
-            <div class="mb-3">
-                <label for="bonus" class="form-label">Bonus:</label>
-                <select id="bonus" class="form-select">
-                    <option value="0">No Priority</option>
-                    <option value="25">Low Priority (+25)</option>
-                    <option value="50">Medium Priority (+50)</option>
-                    <option value="75">High Priority (+75)</option>
-                    <option value="100">Very High Priority (+100)</option>
-                </select>
-            </div>
-            <button class="btn btn-success w-100 mb-2" onclick="addFlight()">Add Flight</button>
-            <button class="btn btn-secondary w-100" onclick="clearAll()">Clear All</button>
-        </div>
+  <div class="container">
+    <h1>Roaster4Mint</h1>
+    <label>Destination:
+      <select id="destination">
+        <option value="">Select destination</option>
+        <option value="Munich">Munich</option>
+        <option value="Madrid">Madrid</option>
+        <option value="Copenhagen">Copenhagen</option>
+        <option value="London">London</option>
+        <option value="LongLayover">Long Layover anywhere in Europe</option>
+      </select>
+    </label>
 
-        <div id="flightList" class="mt-4"></div>
-        <div class="result-list mt-4">
-            <h5>Result</h5>
-            <ul id="results"></ul>
-        </div>
+    <label>Flights:
+      <input type="number" id="flights" min="1">
+    </label>
+
+    <label>Layover time:
+      <select id="duration">
+        <option value="">Select duration</option>
+        <option value="24">24</option>
+        <option value="48">48</option>
+        <option value="70">70</option>
+      </select>
+    </label>
+
+    <label><input type="checkbox" id="weekend"> Weekend Flight</label>
+
+    <label>Bonus:
+      <select id="bonus">
+        <option value="0">No Priority</option>
+        <option value="25">Low Priority (+25)</option>
+        <option value="50">Medium Priority (+50)</option>
+        <option value="75">High Priority (+75)</option>
+        <option value="100">Very High Priority (+100)</option>
+      </select>
+    </label>
+
+    <button class="add" onclick="addFlight()">Add Flight</button>
+    <button class="clear" onclick="clearAll()">Clear All</button>
+
+    <div id="flightsList"></div>
+
+    <div class="result">
+      <h3>Result</h3>
+      <ul id="resultList"></ul>
     </div>
+  </div>
 
-    <script>
-        let flights = [];
+  <script>
+    let flights = [];
 
-        function addFlight() {
-            const destination = document.getElementById("destination").value;
-            const flightCount = parseInt(document.getElementById("flights").value);
-            const duration = document.getElementById("duration").value;
-            const weekend = document.getElementById("weekend").checked;
-            const bonus = parseInt(document.getElementById("bonus").value);
+    function addFlight() {
+      const destination = document.getElementById("destination").value;
+      const flightCount = parseInt(document.getElementById("flights").value);
+      const duration = document.getElementById("duration").value;
+      const weekend = document.getElementById("weekend").checked;
+      const bonus = parseInt(document.getElementById("bonus").value);
 
-            if (!flightCount) return;
+      if (!destination || !flightCount || !duration) return;
 
-            flights.push({ destination, flightCount, duration, weekend, bonus });
-            updateDisplay();
+      const flight = {
+        destination: destination === 'LongLayover' ? "Long Layover in Europe" : destination,
+        flights: flightCount,
+        duration: duration,
+        weekend: weekend,
+        bonus: bonus
+      };
+
+      flights.push(flight);
+      updateDisplay();
+      updateResults();
+      resetForm();
+    }
+
+    function updateDisplay() {
+      const list = document.getElementById("flightsList");
+      list.innerHTML = "";
+      flights.forEach((flight, index) => {
+        const div = document.createElement("div");
+        div.className = "flight";
+        div.innerHTML = `<strong>${flight.destination}</strong><br>${flight.flights} flights, ${flight.duration}h<br>${flight.weekend ? 'Weekend' : 'All Days'}, Bonus: ${flight.bonus}<br><button class='remove' onclick='removeFlight(${index})'>Remove</button>`;
+        list.appendChild(div);
+      });
+    }
+
+    function updateResults() {
+      const results = {};
+      flights.forEach(flight => {
+        const score = flight.bonus;
+        if (!results[score]) results[score] = [];
+
+        const flightText = `${flight.destination}, ${flight.flights} flights, ${flight.duration}h, ${flight.weekend ? 'Weekend' : 'All Days'}, Bonus: ${flight.bonus}`;
+
+        if (!results[score].includes(flightText)) {
+          results[score].push(flightText);
         }
+      });
 
-        function clearAll() {
-            flights = [];
-            updateDisplay();
-        }
+      const resultList = document.getElementById("resultList");
+      resultList.innerHTML = "";
+      [100, 90, 80, 70, 60, 50, 40, 30, 20, 10].forEach(score => {
+        const li = document.createElement("li");
+        li.innerHTML = `<strong>${score}:</strong> ${results[score]?.join(" | ") || "–"}`;
+        resultList.appendChild(li);
+      });
+    }
 
-        function removeFlight(index) {
-            flights.splice(index, 1);
-            updateDisplay();
-        }
+    function clearAll() {
+      flights = [];
+      updateDisplay();
+      updateResults();
+    }
 
-        function updateDisplay() {
-            const list = document.getElementById("flightList");
-            const result = document.getElementById("results");
-            list.innerHTML = "";
-            result.innerHTML = "";
+    function removeFlight(index) {
+      flights.splice(index, 1);
+      updateDisplay();
+      updateResults();
+    }
 
-            flights.forEach((f, i) => {
-                const item = document.createElement("div");
-                item.className = "card card-body";
-                item.innerHTML = `
-                    <strong>${f.destination}</strong><br>
-                    ${f.flightCount} flights, ${f.duration}h<br>
-                    ${f.weekend ? "Weekend" : "All Days"}, Bonus: ${f.bonus}
-                    <button class="btn btn-danger btn-sm mt-2" onclick="removeFlight(${i})">Remove</button>
-                `;
-                list.appendChild(item);
-            });
+    function resetForm() {
+      document.getElementById("destination").value = "";
+      document.getElementById("flights").value = "";
+      document.getElementById("duration").value = "";
+      document.getElementById("weekend").checked = false;
+      document.getElementById("bonus").value = "0";
+    }
 
-            const scoreMap = {};
-            for (let i = 10; i <= 100; i += 10) {
-                scoreMap[i] = [];
-            }
+    document.getElementById("destination").addEventListener("change", () => {
+      const destination = document.getElementById("destination").value;
+      const durationField = document.getElementById("duration");
 
-            flights.forEach(f => {
-                for (let i = 10; i <= 100; i += 10) {
-                    const probability = (f.flightCount / 100) * i + f.bonus;
-                    if (probability >= i) {
-                        scoreMap[i].push(`${f.destination}, ${f.flightCount} flights, ${f.duration}h${f.weekend ? ', Weekend' : ', All Days'}, Bonus: ${f.bonus}`);
-                    }
-                }
-            });
-
-            for (let i = 100; i >= 10; i -= 10) {
-                const li = document.createElement("li");
-                li.innerHTML = `<strong>${i}:</strong> ${scoreMap[i].length > 0 ? scoreMap[i].join(" | ") : "–"}`;
-                result.appendChild(li);
-            }
-        }
-    </script>
+      if (destination === "LongLayover") {
+        durationField.value = "70";
+        durationField.disabled = true;
+      } else {
+        durationField.disabled = false;
+      }
+    });
+  </script>
 </body>
 </html>

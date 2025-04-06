@@ -1,21 +1,40 @@
-let flights = [];
+let flights = JSON.parse(localStorage.getItem("flights")) || [];
+const priorityLabels = {
+  0: "No Priority",
+  0.1: "Low",
+  0.2: "Medium",
+  0.3: "High",
+  0.5: "Very High"
+};
 
 function addFlight() {
   const destination = document.getElementById("destination").value;
   const flightsCount = parseInt(document.getElementById("flights").value);
+  const layover = document.getElementById("layover").value;
   const priority = parseFloat(document.getElementById("priority").value);
+  const weekend = document.getElementById("weekend").checked;
 
-  if (!destination || !flightsCount) return;
+  if (!destination || !flightsCount || !layover) return;
 
-  flights.push({ destination, flights: flightsCount, priority });
+  flights.push({ destination, flights: flightsCount, layover, priority, weekend });
+  localStorage.setItem("flights", JSON.stringify(flights));
   updateFlightList();
-  calculateResults();
+  clearInputs();
 }
 
 function clearAll() {
   flights = [];
+  localStorage.removeItem("flights");
   updateFlightList();
-  calculateResults();
+  document.getElementById("resultList").innerHTML = "";
+}
+
+function clearInputs() {
+  document.getElementById("destination").value = "";
+  document.getElementById("flights").value = "";
+  document.getElementById("layover").value = "";
+  document.getElementById("priority").value = "0";
+  document.getElementById("weekend").checked = false;
 }
 
 function updateFlightList() {
@@ -24,7 +43,8 @@ function updateFlightList() {
   flights.forEach((f, i) => {
     const div = document.createElement("div");
     div.className = "flight-item";
-    div.innerText = `${f.destination} – ${f.flights} flights – Priority: ${f.priority}`;
+    const weekendLabel = f.weekend ? "Weekend" : "All Weekdays";
+    div.innerText = `${f.destination} – ${f.flights} flights – ${f.layover}h – ${weekendLabel} – Priority: ${priorityLabels[f.priority] || f.priority}`;
     list.appendChild(div);
   });
 }
@@ -51,3 +71,7 @@ function calculateResults() {
     resultList.appendChild(li);
   });
 }
+
+window.onload = function () {
+  updateFlightList();
+};

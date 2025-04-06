@@ -142,8 +142,10 @@
     }
 
     function addFlight() {
+      console.log("Add Flight triggered");
+    
       let destination = document.getElementById("destination").value;
-      let duration = document.getElementById("duration").value;
+      let duration = parseInt(document.getElementById("duration").value, 10);
       const flightsCount = parseInt(document.getElementById("flights").value);
       const weekend = document.getElementById("weekend").checked;
       const bonus = parseInt(document.getElementById("bonusPoints").value) || 0;
@@ -154,7 +156,10 @@
         duration = "70";
       }
 
-      if (!destination || isNaN(flightsCount) || !duration) {
+      if (!destination || isNaN(flightsCount) || flightsCount <= 0 || isNaN(duration)) {
+      console.warn("Validation failed", {destination, flightsCount, duration});
+      alert("Please fill in all required fields correctly (Flights must be > 0).");
+    
         alert("Please fill in all required fields.");
         return;
       }

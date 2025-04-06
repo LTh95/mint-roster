@@ -146,7 +146,7 @@
       let duration = document.getElementById("duration").value;
       const flightsCount = parseInt(document.getElementById("flights").value);
       const weekend = document.getElementById("weekend").checked;
-      const bonus = parseInt(document.getElementById("bonusPoints").value) || 0;
+      const bonus = parseInt(document.getElementById("bonusPoints").value, 10) || 0;
       const isLongLayover = document.getElementById("longlayover").checked;
 
       if (isLongLayover) {
@@ -155,6 +155,8 @@
       }
 
       if (!destination || isNaN(flightsCount) || !duration) {
+      alert("Please fill in all required fields correctly.");
+    
         alert("Please fill in all required fields.");
         return;
       }

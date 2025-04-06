@@ -1,77 +1,79 @@
-let flights = JSON.parse(localStorage.getItem("flights")) || [];
-const priorityLabels = {
-  0: "No Priority",
-  0.1: "Low",
-  0.2: "Medium",
-  0.3: "High",
-  0.5: "Very High"
-};
+
+let flights = [];
 
 function addFlight() {
-  const destination = document.getElementById("destination").value;
-  const flightsCount = parseInt(document.getElementById("flights").value);
-  const layover = document.getElementById("layover").value;
-  const priority = parseFloat(document.getElementById("priority").value);
-  const weekend = document.getElementById("weekend").checked;
+    const destination = document.getElementById('destination').value;
+    const number = document.getElementById('flights').value;
+    const layover = document.getElementById('layover').value;
+    const priority = document.getElementById('priority').value;
+    const weekend = document.getElementById('weekend').checked;
 
-  if (!destination || !flightsCount || !layover) return;
+    if (!destination || !number || !layover) {
+        alert("Please fill in all required fields.");
+        return;
+    }
 
-  flights.push({ destination, flights: flightsCount, layover, priority, weekend });
-  localStorage.setItem("flights", JSON.stringify(flights));
-  updateFlightList();
-  clearInputs();
+    const flight = {
+        destination,
+        number: parseInt(number),
+        layover,
+        priority,
+        weekend,
+    };
+
+    flights.push(flight);
+    updateFlightList();
+    resetForm();
 }
 
-function clearAll() {
-  flights = [];
-  localStorage.removeItem("flights");
-  updateFlightList();
-  document.getElementById("resultList").innerHTML = "";
-}
-
-function clearInputs() {
-  document.getElementById("destination").value = "";
-  document.getElementById("flights").value = "";
-  document.getElementById("layover").value = "";
-  document.getElementById("priority").value = "0";
-  document.getElementById("weekend").checked = false;
+function resetForm() {
+    document.getElementById('destination').value = "";
+    document.getElementById('flights').value = "";
+    document.getElementById('layover').value = "";
+    document.getElementById('priority').value = "No Priority";
+    document.getElementById('weekend').checked = false;
 }
 
 function updateFlightList() {
-  const list = document.getElementById("flightList");
-  list.innerHTML = "";
-  flights.forEach((f, i) => {
-    const div = document.createElement("div");
-    div.className = "flight-item";
-    const weekendLabel = f.weekend ? "Weekend" : "All Weekdays";
-    div.innerText = `${f.destination} – ${f.flights} flights – ${f.layover}h – ${weekendLabel} – Priority: ${priorityLabels[f.priority] || f.priority}`;
-    list.appendChild(div);
-  });
+    const container = document.getElementById('flight-list');
+    container.innerHTML = "";
+    flights.forEach((f, i) => {
+        container.innerHTML += `
+            <div class='card'>
+                <strong>${f.destination}</strong><br/>
+                ${f.number} flights, ${f.layover}h<br/>
+                ${f.weekend ? "Weekend" : "All Weekdays"}, Priority: ${f.priority}
+                <button onclick="removeFlight(${i})">Remove</button>
+            </div>`;
+    });
 }
 
-function calculateResults() {
-  const totalFlights = flights.reduce((sum, f) => sum + f.flights, 0);
-  if (totalFlights === 0) return;
-
-  flights.forEach(f => {
-    f.prob = f.flights / totalFlights;
-    f.weighted = f.prob * (1 + f.priority);
-  });
-
-  const sorted = [...flights].sort((a, b) => b.weighted - a.weighted);
-  const points = [100, 90, 80, 70, 60, 50, 40, 30, 20, 10];
-
-  const resultList = document.getElementById("resultList");
-  resultList.innerHTML = "";
-
-  sorted.slice(0, 10).forEach((f, i) => {
-    const li = document.createElement("li");
-    const display = `${f.destination} — ${points[i]} points (Weighted Chance: ${(f.weighted*100).toFixed(1)}%)`;
-    li.innerText = display;
-    resultList.appendChild(li);
-  });
+function removeFlight(index) {
+    flights.splice(index, 1);
+    updateFlightList();
 }
 
-window.onload = function () {
-  updateFlightList();
-};
+function clearAll() {
+    flights = [];
+    updateFlightList();
+    document.getElementById('results').innerHTML = "";
+}
+
+function calculate() {
+    const priorities = [100, 90, 80, 70, 60, 50, 40, 30, 20, 10];
+    const sorted = [...flights].sort((a, b) => {
+        let scoreA = a.number;
+        let scoreB = b.number;
+        const bonusMap = { "Low": 25, "Medium": 50, "High": 75, "Very High": 100 };
+        if (a.priority !== "No Priority") scoreA += bonusMap[a.priority];
+        if (b.priority !== "No Priority") scoreB += bonusMap[b.priority];
+        return scoreB - scoreA;
+    });
+
+    const assigned = sorted.slice(0, priorities.length);
+    const results = assigned.map((flight, i) => {
+        return `<li><strong>${priorities[i]}</strong>: ${flight.destination}, ${flight.number} flights, ${flight.layover}h, ${flight.weekend ? "Weekend" : "All Weekdays"}, Priority: ${flight.priority}</li>`;
+    });
+
+    document.getElementById('results').innerHTML = `<ul>${results.join("")}</ul>`;
+}

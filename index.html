@@ -101,7 +101,7 @@
         <option value="48-70">48 to 70</option>
       </select>
       <label><input type="checkbox" id="weekend" /> Weekend Flight</label>
-      <label><input type="checkbox" id="highpay" /> High Pay</label>
+      
       <input placeholder="Bonus Points" type="number" id="bonusPoints" />
       <button onclick="addFlight()">Add Flight</button>
     </div>
@@ -123,7 +123,7 @@
       const flightsCount = parseInt(document.getElementById("flights").value);
       const duration = document.getElementById("duration").value;
       const weekend = document.getElementById("weekend").checked;
-      const highpay = document.getElementById("highpay").checked;
+      
       const bonus = parseInt(document.getElementById("bonusPoints").value) || 0;
 
       if (!destination || isNaN(flightsCount) || !duration) {
@@ -136,11 +136,18 @@
         flights: flightsCount,
         duration,
         weekend,
-        highpay,
+        
         bonus
       });
 
       updateFlightList();
+      // Clear form inputs
+      document.getElementById("destination").value = "";
+      document.getElementById("flights").value = "";
+      document.getElementById("duration").value = "";
+      document.getElementById("weekend").checked = false;
+      document.getElementById("highpay").checked = false;
+      document.getElementById("bonusPoints").value = "";
     }
 
     function updateFlightList() {
@@ -162,11 +169,25 @@
     function removeFlight(index) {
       flights.splice(index, 1);
       updateFlightList();
+      // Clear form inputs
+      document.getElementById("destination").value = "";
+      document.getElementById("flights").value = "";
+      document.getElementById("duration").value = "";
+      document.getElementById("weekend").checked = false;
+      document.getElementById("highpay").checked = false;
+      document.getElementById("bonusPoints").value = "";
     }
 
     function clearFlights() {
       flights.length = 0;
       updateFlightList();
+      // Clear form inputs
+      document.getElementById("destination").value = "";
+      document.getElementById("flights").value = "";
+      document.getElementById("duration").value = "";
+      document.getElementById("weekend").checked = false;
+      document.getElementById("highpay").checked = false;
+      document.getElementById("bonusPoints").value = "";
     }
 
     function calculate() {
@@ -174,16 +195,31 @@
       const resultList = document.getElementById("results");
       resultList.innerHTML = "";
 
+      const resultsByScore = {};
+
       flights.forEach(f => {
         const probability = f.flights / totalFlights;
         const score = Math.round(100 * probability + f.bonus);
-        const li = document.createElement("li");
-        li.innerHTML = `<strong>${f.destination}</strong> – Score: ${score}
-          <div class='score-bar-container'>
-            <div class='score-bar' style='width:${score}%'></div>
-          </div>`;
-        resultList.appendChild(li);
+        if (!resultsByScore[score]) {
+          resultsByScore[score] = [];
+        }
+        resultsByScore[score].push(f);
       });
+
+      for (let s = 100; s >= 10; s -= 10) {
+        const li = document.createElement("li");
+        li.innerHTML = `<strong>${s}:</strong> `;
+
+        if (resultsByScore[s]) {
+          li.innerHTML += resultsByScore[s].map(f => 
+            `${f.destination} – ${f.flights} flights, ${f.duration}h, ${f.weekend ? "Weekend" : "Weekday"}, Bonus: ${f.bonus}`
+          ).join("<br/>");
+        } else {
+          li.innerHTML += "–";
+        }
+
+        resultList.appendChild(li);
+      }
     }
   </script>
 </body>

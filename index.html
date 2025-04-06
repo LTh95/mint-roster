@@ -126,20 +126,27 @@ function loadFlights() {
   if (saved) {
     const parsed = JSON.parse(saved);
     flights.push(...parsed);
-    updateFlightList();
+    updateFlightList(); calculate();
   }
 }
 
 function clearFlights() {
   flights.length = 0;
   localStorage.removeItem("flights");
-  updateFlightList();
+  updateFlightList(); calculate();
 }
 
     const flights = [];
 
     function addFlight() {
       let destination = document.getElementById("destination").value;
+    let duration = document.getElementById("duration").value;
+    const isLongLayover = document.getElementById("longlayover").checked;
+
+    if (isLongLayover) {
+      destination = "Any (Long layover in Europe)";
+      duration = "70";
+    }
       const flightsCount = parseInt(document.getElementById("flights").value);
       const duration = document.getElementById("duration").value;
       const weekend = document.getElementById("weekend").checked;
@@ -165,7 +172,7 @@ function clearFlights() {
         bonus
       });
 
-      updateFlightList();
+      updateFlightList(); calculate();
       // Clear form inputs
       document.getElementById("destination").value = "";
       document.getElementById("flights").value = "";
@@ -194,7 +201,7 @@ function clearFlights() {
 
     function removeFlight(index) {
       flights.splice(index, 1);
-      updateFlightList();
+      updateFlightList(); calculate();
       // Clear form inputs
       document.getElementById("destination").value = "";
       document.getElementById("flights").value = "";
@@ -207,7 +214,7 @@ function clearFlights() {
 
     function clearFlights() {
       flights.length = 0;
-      updateFlightList();
+      updateFlightList(); calculate();
       // Clear form inputs
       document.getElementById("destination").value = "";
       document.getElementById("flights").value = "";

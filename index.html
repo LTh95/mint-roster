@@ -239,7 +239,17 @@
       document.getElementById("duration").disabled = isChecked;
     });
 
-    loadFlights();
+    
+window.addEventListener("DOMContentLoaded", () => {
+  const saved = localStorage.getItem("flights");
+  if (saved) {
+    const parsed = JSON.parse(saved);
+    flights.push(...parsed);
+    updateFlightList();
+    setTimeout(calculate, 100); // kleiner Delay für mobile Kompatibilität
+  }
+});
+
   </script>
 </body>
 </html>

@@ -145,15 +145,23 @@
       console.log("Add Flight triggered");
     
       let destination = document.getElementById("destination").value;
-      let duration = parseInt(document.getElementById("duration").value, 10);
-      const flightsCount = parseInt(document.getElementById("flights").value);
+      let durationRaw = document.getElementById("duration").value;
+  let duration = 0;
+  const isLongLayover = document.getElementById("longlayover").checked;
+  if (isLongLayover) {
+    destination = "Any (Long layover in Europe)";
+    duration = 70;
+  } else {
+    duration = parseInt(durationRaw, 10);
+  }
+      const flightsCount = parseInt(document.getElementById("flights").value, 10) || 0;
       const weekend = document.getElementById("weekend").checked;
       const bonus = parseInt(document.getElementById("bonusPoints").value) || 0;
       const isLongLayover = document.getElementById("longlayover").checked;
 
       if (isLongLayover) {
         destination = "Any (Long layover in Europe)";
-        duration = "70";
+        duration = 70;
       }
 
       if (!destination || isNaN(flightsCount) || flightsCount <= 0 || isNaN(duration)) {

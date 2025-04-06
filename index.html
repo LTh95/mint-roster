@@ -103,7 +103,8 @@
       <label><input type="checkbox" id="weekend" /> Weekend Flight</label>
       
       <input placeholder="Bonus Points" type="number" id="bonusPoints" />
-      <button onclick="addFlight()">Add Flight</button>
+      <label><input type="checkbox" id="longlayover" /> Long layover in Europe</label>
+    <button onclick="addFlight()">Add Flight</button>
     </div>
 
     <h2>Added Flights</h2>
@@ -126,7 +127,11 @@
       
       const bonus = parseInt(document.getElementById("bonusPoints").value) || 0;
 
-      if (!destination || isNaN(flightsCount) || !duration) {
+      if (document.getElementById("longlayover").checked) {
+        destination = "Any (Long layover in Europe)";
+        duration = "70";
+    }
+    if (!destination || isNaN(flightsCount) || !duration) {
         alert("Please fill in all flight fields correctly.");
         return;
       }
@@ -148,6 +153,7 @@
       document.getElementById("weekend").checked = false;
       document.getElementById("highpay").checked = false;
       document.getElementById("bonusPoints").value = "";
+      document.getElementById("longlayover").checked = false;
     }
 
     function updateFlightList() {
@@ -176,6 +182,7 @@
       document.getElementById("weekend").checked = false;
       document.getElementById("highpay").checked = false;
       document.getElementById("bonusPoints").value = "";
+      document.getElementById("longlayover").checked = false;
     }
 
     function clearFlights() {
@@ -188,6 +195,7 @@
       document.getElementById("weekend").checked = false;
       document.getElementById("highpay").checked = false;
       document.getElementById("bonusPoints").value = "";
+      document.getElementById("longlayover").checked = false;
     }
 
     function calculate() {
@@ -221,6 +229,12 @@
         resultList.appendChild(li);
       }
     }
-  </script>
+  
+    document.getElementById("longlayover").addEventListener("change", function() {
+      const isChecked = this.checked;
+      document.getElementById("destination").disabled = isChecked;
+      document.getElementById("duration").disabled = isChecked;
+    });
+</script>
 </body>
 </html>

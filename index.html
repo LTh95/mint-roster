@@ -1,0 +1,65 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flight Preference Planner</title>
+    <link href="style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>Flight Preference Planner</h1>
+        <form id="flight-form">
+            <label for="destination">Destination:</label>
+            <select id="destination">
+                <option value="">Select destination</option>
+                <option>Munich</option>
+                <option>Vienna</option>
+                <option>Copenhagen</option>
+                <option>Zurich</option>
+                <option>Madrid</option>
+                <option>Barcelona</option>
+                <option>London</option>
+                <option>Düsseldorf</option>
+                <option>Frankfurt</option>
+                <option>Asia</option>
+                <option>Layover Long Europe</option>
+            </select>
+
+            <label for="flights">Number of Flights:</label>
+            <input type="number" id="flights" min="1">
+
+            <label for="layover">Layover Time:</label>
+            <select id="layover">
+                <option value="">Select layover</option>
+                <option>24</option>
+                <option>48</option>
+                <option>70</option>
+                <option>48 to 70</option>
+            </select>
+
+            <label for="priority">Your Priority:</label>
+            <select id="priority">
+                <option>No Priority</option>
+                <option>Low</option>
+                <option>Medium</option>
+                <option>High</option>
+                <option>Very High</option>
+            </select>
+
+            <label>
+                <input type="checkbox" id="weekend"> Weekend
+            </label>
+
+            <button type="button" onclick="addFlight()">Add Flight</button>
+            <button type="button" onclick="clearAll()">Clear All</button>
+        </form>
+
+        <div id="flight-list"></div>
+
+        <button onclick="generateResult()">Plan your roaster now</button>
+        <div id="result"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

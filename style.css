@@ -1,62 +1,48 @@
-
 body {
-    font-family: Arial, sans-serif;
-    background: #f0f9f5;
+  font-family: Arial, sans-serif;
+  background: #f3f7f9;
+  margin: 0;
+  padding: 20px;
 }
-.container {
-    max-width: 600px;
-    margin: 30px auto;
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+.app {
+  max-width: 600px;
+  margin: auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 12px rgba(0,0,0,0.1);
 }
-h1 {
-    text-align: center;
+h1, h2 {
+  text-align: center;
+  color: #1f2937;
 }
 label {
-    display: block;
-    margin-top: 10px;
-    font-weight: bold;
+  display: block;
+  margin: 12px 0 4px;
 }
-input, select {
-    width: 100%;
-    padding: 8px;
-    margin-top: 4px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
+input, select, button {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
 }
-.buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 15px;
+button {
+  background-color: #0f766e;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
 }
-.add {
-    background: #007b5e;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 6px;
+button:hover {
+  background-color: #115e59;
 }
-.clear {
-    background: #6c757d;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 6px;
+#flightList {
+  margin-top: 20px;
 }
-.flight-card {
-    background: #f8f9fa;
-    border-left: 5px solid #007b5e;
-    padding: 10px;
-    margin-top: 10px;
-    border-radius: 6px;
-}
-.remove {
-    background: #dc3545;
-    color: white;
-    padding: 5px 10px;
-    border: none;
-    margin-top: 5px;
-    border-radius: 4px;
+.flight-item {
+  background: #eef2f7;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-left: 5px solid #0f766e;
+  border-radius: 6px;
 }

@@ -1,81 +1,53 @@
-
 let flights = [];
 
 function addFlight() {
-    const destination = document.getElementById('destination').value;
-    const numFlights = parseInt(document.getElementById('flights').value);
-    const duration = document.getElementById('duration').value;
-    const weekend = document.getElementById('weekend').checked;
-    const bonus = parseInt(document.getElementById('bonus').value);
+  const destination = document.getElementById("destination").value;
+  const flightsCount = parseInt(document.getElementById("flights").value);
+  const priority = parseFloat(document.getElementById("priority").value);
 
-    if (!destination || !numFlights || !duration) return;
+  if (!destination || !flightsCount) return;
 
-    // Automatischer Wert bei "Long Layover in Europe"
-    const finalDuration = destination === "Long Layover in Europe" ? "70" : duration;
-
-    const flight = {
-        destination,
-        numFlights,
-        duration: finalDuration,
-        weekend,
-        bonus
-    };
-
-    flights.push(flight);
-    renderFlights();
-    renderResult();
-
-    // Reset
-    document.getElementById('destination').value = "";
-    document.getElementById('flights').value = "";
-    document.getElementById('duration').value = "";
-    document.getElementById('weekend').checked = false;
-    document.getElementById('bonus').value = "0";
-}
-
-function removeFlight(index) {
-    flights.splice(index, 1);
-    renderFlights();
-    renderResult();
+  flights.push({ destination, flights: flightsCount, priority });
+  updateFlightList();
+  calculateResults();
 }
 
 function clearAll() {
-    flights = [];
-    renderFlights();
-    renderResult();
+  flights = [];
+  updateFlightList();
+  calculateResults();
 }
 
-function renderFlights() {
-    const container = document.getElementById('flights-list');
-    container.innerHTML = '';
-    flights.forEach((f, i) => {
-        const div = document.createElement('div');
-        div.className = 'flight-card';
-        div.innerHTML = `<strong>${f.destination}</strong><br>
-            ${f.numFlights} flights, ${f.duration}h<br>
-            ${f.weekend ? 'Weekend' : 'All Days'}, Bonus: ${f.bonus}<br>
-            <button class="remove" onclick="removeFlight(${i})">Remove</button>`;
-        container.appendChild(div);
-    });
+function updateFlightList() {
+  const list = document.getElementById("flightList");
+  list.innerHTML = "";
+  flights.forEach((f, i) => {
+    const div = document.createElement("div");
+    div.className = "flight-item";
+    div.innerText = `${f.destination} – ${f.flights} flights – Priority: ${f.priority}`;
+    list.appendChild(div);
+  });
 }
 
-function renderResult() {
-    const result = {};
-    for (let i = 10; i <= 100; i += 10) result[i] = [];
+function calculateResults() {
+  const totalFlights = flights.reduce((sum, f) => sum + f.flights, 0);
+  if (totalFlights === 0) return;
 
-    const keys = [...new Set(flights.map(JSON.stringify))].map(JSON.parse);
+  flights.forEach(f => {
+    f.prob = f.flights / totalFlights;
+    f.weighted = f.prob * (1 + f.priority);
+  });
 
-    keys.forEach(flight => {
-        const score = Math.min(100, Math.floor(flight.numFlights + flight.bonus));
-        const rounded = Math.ceil(score / 10) * 10;
-        result[rounded].push(`${flight.destination}, ${flight.numFlights} flights, ${flight.duration}h, ${flight.weekend ? 'Weekend' : 'All Days'}, Bonus: ${flight.bonus}`);
-    });
+  const sorted = [...flights].sort((a, b) => b.weighted - a.weighted);
+  const points = [100, 90, 80, 70, 60, 50, 40, 30, 20, 10];
 
-    const ul = document.getElementById('result-list');
-    ul.innerHTML = '';
-    for (let i = 100; i >= 10; i -= 10) {
-        const li = document.createElement('li');
-        li.innerHTML = `<strong>${i}:</strong> ${result[i].join(' | ') || '–'}`;
-        ul.appendChild(li);
-    }
+  const resultList = document.getElementById("resultList");
+  resultList.innerHTML = "";
+
+  sorted.slice(0, 10).forEach((f, i) => {
+    const li = document.createElement("li");
+    const display = `${f.destination} — ${points[i]} points (Weighted Chance: ${(f.weighted*100).toFixed(1)}%)`;
+    li.innerText = display;
+    resultList.appendChild(li);
+  });
 }

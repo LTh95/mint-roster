@@ -2,59 +2,63 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="UTF-8">
     <title>Flight Preference Planner</title>
-    <link href="styles.css" rel="stylesheet"/>
+    <link href="style.css" rel="stylesheet">
 </head>
 <body>
     <div class="container">
         <h1>Flight Preference Planner</h1>
         <form id="flight-form">
-            <label>Destination:
-                <select id="destination">
-                    <option value="">Select destination</option>
-                    <option value="Munich">Munich</option>
-                    <option value="Vienna">Vienna</option>
-                    <option value="Copenhagen">Copenhagen</option>
-                    <option value="Zurich">Zurich</option>
-                    <option value="Madrid">Madrid</option>
-                    <option value="Barcelona">Barcelona</option>
-                    <option value="London">London</option>
-                    <option value="Düsseldorf">Düsseldorf</option>
-                    <option value="Frankfurt">Frankfurt</option>
-                    <option value="Asia">Asia</option>
-                    <option value="Long Layover anywhere in Europe">Long Layover anywhere in Europe</option>
-                </select>
-            </label><br/>
-            <label>Number of Flights:
-                <input type="number" id="flights" min="1"/>
-            </label><br/>
-            <label>Layover Time:
-                <select id="layover">
-                    <option value="">Select layover</option>
-                    <option value="24">24</option>
-                    <option value="48">48</option>
-                    <option value="70">70</option>
-                    <option value="48-70">48 to 70</option>
-                </select>
-            </label><br/>
-            <label>Your Priority:
-                <select id="priority">
-                    <option value="No Priority">No Priority</option>
-                    <option value="Low">Low Priority (+25)</option>
-                    <option value="Medium">Medium Priority (+50)</option>
-                    <option value="High">High Priority (+75)</option>
-                    <option value="Very High">Very High Priority (+100)</option>
-                </select>
-            </label><br/>
-            <label><input type="checkbox" id="weekend"/> Weekend</label><br/>
+            <label for="destination">Destination:</label>
+            <select id="destination">
+                <option value="">Select destination</option>
+                <option>Munich</option>
+                <option>Vienna</option>
+                <option>Copenhagen</option>
+                <option>Zurich</option>
+                <option>Madrid</option>
+                <option>Barcelona</option>
+                <option>London</option>
+                <option>Düsseldorf</option>
+                <option>Frankfurt</option>
+                <option>Asia</option>
+                <option>Layover Long Europe</option>
+            </select>
+
+            <label for="flights">Number of Flights:</label>
+            <input type="number" id="flights" min="1">
+
+            <label for="layover">Layover Time:</label>
+            <select id="layover">
+                <option value="">Select layover</option>
+                <option>24</option>
+                <option>48</option>
+                <option>70</option>
+                <option>48 to 70</option>
+            </select>
+
+            <label for="priority">Your Priority:</label>
+            <select id="priority">
+                <option>No Priority</option>
+                <option>Low</option>
+                <option>Medium</option>
+                <option>High</option>
+                <option>Very High</option>
+            </select>
+
+            <label>
+                <input type="checkbox" id="weekend"> Weekend
+            </label>
+
             <button type="button" onclick="addFlight()">Add Flight</button>
             <button type="button" onclick="clearAll()">Clear All</button>
         </form>
+
         <div id="flight-list"></div>
-        <button onclick="calculate()">Plan your roaster now</button>
-        <div id="results"></div>
+
+        <button onclick="generateResult()">Plan your roaster now</button>
+        <div id="result"></div>
     </div>
     <script src="script.js"></script>
 </body>

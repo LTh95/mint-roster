@@ -146,7 +146,7 @@
       let duration = document.getElementById("duration").value;
       const flightsCount = parseInt(document.getElementById("flights").value);
       const weekend = document.getElementById("weekend").checked;
-      const bonus = parseInt(document.getElementById("bonusPoints").value, 10) || 0;
+      const bonus = parseInt(document.getElementById("bonusPoints").value) || 0;
       const isLongLayover = document.getElementById("longlayover").checked;
 
       if (isLongLayover) {
@@ -155,8 +155,6 @@
       }
 
       if (!destination || isNaN(flightsCount) || !duration) {
-      alert("Please fill in all required fields correctly.");
-    
         alert("Please fill in all required fields.");
         return;
       }
@@ -243,17 +241,13 @@ const score = Math.floor(rawScore / 10) * 10;
 
         if (resultsByScore[s]) {
           
-      resultsByScore[s].forEach(f => {
+      li.innerHTML += resultsByScore[s].map(f => {
         const pClass = f.bonus >= 100 ? "priority-veryhigh"
                         : f.bonus >= 75 ? "priority-high"
                         : f.bonus >= 50 ? "priority-medium"
                         : f.bonus >= 25 ? "priority-low" : "";
-        const item = document.createElement("div");
-        item.className = "flight-item " + pClass;
-        item.innerHTML = `${f.destination} – ${f.flights} flights, ${f.duration}h, ${f.weekend ? "Weekend" : "all days"}, Bonus: ${f.bonus}`;
-        li.appendChild(item);
-      });
-      li.innerHTML += ""; // placeholder to keep structure
+        return `<div class="flight-item ${pClass}">${f.destination} – ${f.flights} flights, ${f.duration}h, ${f.weekend ? "Weekend" : "all days"}, Bonus: ${f.bonus}</div>`;
+      }).join("");
             `${f.destination} – ${f.flights} flights, ${f.duration}h, ${f.weekend ? "Weekend" : "all days"}, Bonus: ${f.bonus}`
           ).join("<br/>");
         } else {

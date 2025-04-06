@@ -4,29 +4,66 @@
 <head>
     <meta charset="UTF-8">
     <title>Roaster4Mint</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 2rem;
-        }
-        .header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-        .header img {
-            height: 80px;
-        }
-        h1 {
-            margin: 0;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="header">
-        <img src="logo.png" alt="Logo">
+        <img src="logo.png" alt="Logo" class="logo">
         <h1>Roaster4Mint</h1>
     </div>
     <p>Willkommen bei der besten Flugplanungsseite für MINT-Flugbegleiterinnen!</p>
+
+    <div class="input-form">
+        <label>Destination:
+            <select id="destination">
+                <option value="Munich">Munich</option>
+                <option value="Dusseldorf">Düsseldorf</option>
+                <option value="Frankfurt">Frankfurt</option>
+                <option value="London">London</option>
+                <option value="Manchester">Manchester</option>
+                <option value="Lisbon">Lissabon</option>
+                <option value="Copenhagen">Kopenhagen</option>
+                <option value="Madrid">Madrid</option>
+                <option value="Barcelona">Barcelona</option>
+                <option value="Vienna">Wien</option>
+                <option value="Zurich">Zürich</option>
+                <option value="Paris">Paris</option>
+                <option value="Asia">Asien</option>
+            </select>
+        </label><br>
+
+        <label>Flights: <input type="number" id="flights" /></label><br>
+
+        <label>Duration:
+            <select id="duration">
+                <option value="24">24h</option>
+                <option value="48">48h</option>
+                <option value="50">50h</option>
+                <option value="70">70h</option>
+                <option value="24-48">24-48h</option>
+                <option value="48-70">48-70h</option>
+            </select>
+        </label><br>
+
+        <label><input type="checkbox" id="weekend"> Weekend Flight</label><br>
+
+        <label>Bonus:
+            <select id="bonus">
+                <option value="0">No Priority</option>
+                <option value="25">Low Priority (+25)</option>
+                <option value="50">Medium Priority (+50)</option>
+                <option value="75">High Priority (+75)</option>
+                <option value="100">Very High Priority (+100)</option>
+            </select>
+        </label><br>
+
+        <button onclick="addFlight()">Add Flight</button>
+        <button onclick="clearAll()">Clear All</button>
+    </div>
+
+    <div id="added-flights"></div>
+    <div id="results"></div>
+
+    <script src="script.js"></script>
 </body>
 </html>

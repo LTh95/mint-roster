@@ -29,6 +29,28 @@
       <label>Number of Flights:
         <input type="number" id="flights" min="1" />
       </label>
+      <label>Layover Time:
+        <select id="layover">
+          <option value="">Select layover</option>
+          <option value="24">24</option>
+          <option value="48">48</option>
+          <option value="70">70</option>
+          <option value="48-70">48 to 70</option>
+        </select>
+      </label>
+
+<label>
+      <label>Layover Time:
+        <select id="layover">
+          <option value="">Select layover</option>
+          <option value="24">24</option>
+          <option value="48">48</option>
+          <option value="70">70</option>
+          <option value="48-70">48 to 70</option>
+        </select>
+      </label>
+        <input type="number" id="flights" min="1" />
+      </label>
       <label>Your Priority:
         <select id="priority">
           <option value="0">No Priority</option>
@@ -38,10 +60,12 @@
           <option value="0.5">Very High</option>
         </select>
       </label>
+      <label><input type="checkbox" id="weekend" /> Weekend</label>
       <button onclick="addFlight()">Add Flight</button>
       <button onclick="clearAll()">Clear All</button>
     </div>
     <div id="flightList"></div>
+    <button onclick="calculateResults()">Plan your roaster now</button>
     <h2>Optimized Preference Plan</h2>
     <ol id="resultList"></ol>
   </div>

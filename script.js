@@ -2,51 +2,41 @@
 let flights = [];
 
 function addFlight() {
-    const dest = document.getElementById("destination").value;
-    const flightCount = parseInt(document.getElementById("flights").value);
+    const destination = document.getElementById("destination").value;
+    const flightsNum = document.getElementById("flights").value;
     const duration = document.getElementById("duration").value;
-    const weekend = document.getElementById("weekend").checked;
+    const weekend = document.getElementById("weekend").checked ? "Weekend" : "All Days";
     const bonus = parseInt(document.getElementById("bonus").value);
 
-    if (!dest || isNaN(flightCount)) return;
-
-    flights.push({ dest, flightCount, duration, weekend, bonus });
-    displayFlights();
-    calculateResults();
+    const flight = { destination, flights: flightsNum, duration, weekend, bonus };
+    flights.push(flight);
+    updateDisplay();
 }
 
-function displayFlights() {
-    const container = document.getElementById("added-flights");
-    container.innerHTML = "<h3>Added Flights:</h3>";
-    flights.forEach((f, index) => {
-        container.innerHTML += `
-            <div>${f.dest}, ${f.flightCount} flights, ${f.duration}, ${f.weekend ? "Weekend" : "All Days"}, Bonus: ${f.bonus}
-            <button onclick="removeFlight(${index})">Remove</button></div>
-        `;
-    });
+function clearFlights() {
+    flights = [];
+    updateDisplay();
 }
 
 function removeFlight(index) {
     flights.splice(index, 1);
-    displayFlights();
-    calculateResults();
+    updateDisplay();
 }
 
-function clearAll() {
-    flights = [];
-    displayFlights();
-    calculateResults();
-}
+function updateDisplay() {
+    const flightList = document.getElementById("flightList");
+    const resultList = document.getElementById("resultList");
+    flightList.innerHTML = "<h2>Added Flights:</h2>" + flights.map((f, i) =>
+        `<div>${f.destination}, ${f.flights} flights, ${f.duration}h, ${f.weekend}, Bonus: ${f.bonus} <button onclick="removeFlight(${i})">Remove</button></div>`
+    ).join("");
 
-function calculateResults() {
-    const results = Array(10).fill().map((_, i) => ({ score: (10 - i) * 10, flights: [] }));
+    const results = Array(10).fill("–");
     flights.forEach(f => {
-        const match = results.find(r => r.score === f.bonus);
-        if (match) match.flights.push(`${f.dest} (${f.flightCount} flights, ${f.duration})`);
+        const scoreIndex = Math.floor(f.bonus / 10);
+        results[10 - scoreIndex - 1] = `${f.destination}, ${f.flights} flights, ${f.duration}h, ${f.weekend}`;
     });
 
-    const resultDiv = document.getElementById("results");
-    resultDiv.innerHTML = "<h3>Result:</h3><ul>" + results.map(r =>
-        `<li><strong>${r.score}:</strong> ${r.flights.join(", ") || "–"}</li>`
-    ).join("") + "</ul>";
+    resultList.innerHTML = results.map((res, i) =>
+        `<li><strong>${(10 - i) * 10}:</strong> ${res}</li>`
+    ).join("");
 }

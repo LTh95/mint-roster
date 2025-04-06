@@ -101,10 +101,9 @@
         <option value="48-70">48 to 70</option>
       </select>
       <label><input type="checkbox" id="weekend" /> Weekend Flight</label>
-      
       <input placeholder="Bonus Points" type="number" id="bonusPoints" />
       <label><input type="checkbox" id="longlayover" /> Long layover in Europe</label>
-    <button onclick="addFlight()">Add Flight</button>
+      <button onclick="addFlight()">Add Flight</button>
     </div>
 
     <h2>Added Flights</h2>
@@ -112,54 +111,41 @@
     <button onclick="clearFlights()">Clear All</button>
 
     <h2>Result</h2>
-    <button onclick="calculate()">Calculate Scores</button>
     <ul id="results"></ul>
   </div>
 
   <script>
-function saveFlights() {
-  localStorage.setItem("flights", JSON.stringify(flights));
-}
-
-function loadFlights() {
-  const saved = localStorage.getItem("flights");
-  if (saved) {
-    const parsed = JSON.parse(saved);
-    flights.push(...parsed);
-    updateFlightList(); calculate();
-  }
-}
-
-function clearFlights() {
-  flights.length = 0;
-  localStorage.removeItem("flights");
-  updateFlightList(); calculate();
-}
-
     const flights = [];
+
+    function saveFlights() {
+      localStorage.setItem("flights", JSON.stringify(flights));
+    }
+
+    function loadFlights() {
+      const saved = localStorage.getItem("flights");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        flights.push(...parsed);
+        updateFlightList();
+        calculate();
+      }
+    }
 
     function addFlight() {
       let destination = document.getElementById("destination").value;
-    let duration = document.getElementById("duration").value;
-    const isLongLayover = document.getElementById("longlayover").checked;
-
-    if (isLongLayover) {
-      destination = "Any (Long layover in Europe)";
-      duration = "70";
-    }
+      let duration = document.getElementById("duration").value;
       const flightsCount = parseInt(document.getElementById("flights").value);
-      const duration = document.getElementById("duration").value;
       const weekend = document.getElementById("weekend").checked;
-      
       const bonus = parseInt(document.getElementById("bonusPoints").value) || 0;
+      const isLongLayover = document.getElementById("longlayover").checked;
 
-      if (document.getElementById("longlayover").checked) {
+      if (isLongLayover) {
         destination = "Any (Long layover in Europe)";
         duration = "70";
-    }
+      }
 
-    if (!destination || isNaN(flightsCount) || !duration) {
-        alert("Please fill in all flight fields correctly.");
+      if (!destination || isNaN(flightsCount) || !duration) {
+        alert("Please fill in all required fields.");
         return;
       }
 
@@ -168,19 +154,21 @@ function clearFlights() {
         flights: flightsCount,
         duration,
         weekend,
-        
         bonus
       });
 
-      updateFlightList(); calculate();
-      // Clear form inputs
+      saveFlights();
+      updateFlightList();
+      calculate();
+
       document.getElementById("destination").value = "";
       document.getElementById("flights").value = "";
       document.getElementById("duration").value = "";
       document.getElementById("weekend").checked = false;
-      document.getElementById("highpay").checked = false;
       document.getElementById("bonusPoints").value = "";
       document.getElementById("longlayover").checked = false;
+      document.getElementById("destination").disabled = false;
+      document.getElementById("duration").disabled = false;
     }
 
     function updateFlightList() {
@@ -192,7 +180,7 @@ function clearFlights() {
         li.innerHTML = `
           <strong>${f.destination}</strong><br/>
           ${f.flights} flights, ${f.duration}h<br/>
-          ${f.weekend ? "Weekend" : "all days"}, ${f.highpay ? "High Pay" : "Normal"}, Bonus: ${f.bonus}
+          ${f.weekend ? "Weekend" : "all days"}, Bonus: ${f.bonus}
           <button onclick="removeFlight(${index})">✖</button>
         `;
         flightList.appendChild(li);
@@ -201,28 +189,16 @@ function clearFlights() {
 
     function removeFlight(index) {
       flights.splice(index, 1);
-      updateFlightList(); calculate();
-      // Clear form inputs
-      document.getElementById("destination").value = "";
-      document.getElementById("flights").value = "";
-      document.getElementById("duration").value = "";
-      document.getElementById("weekend").checked = false;
-      document.getElementById("highpay").checked = false;
-      document.getElementById("bonusPoints").value = "";
-      document.getElementById("longlayover").checked = false;
+      saveFlights();
+      updateFlightList();
+      calculate();
     }
 
     function clearFlights() {
       flights.length = 0;
-      updateFlightList(); calculate();
-      // Clear form inputs
-      document.getElementById("destination").value = "";
-      document.getElementById("flights").value = "";
-      document.getElementById("duration").value = "";
-      document.getElementById("weekend").checked = false;
-      document.getElementById("highpay").checked = false;
-      document.getElementById("bonusPoints").value = "";
-      document.getElementById("longlayover").checked = false;
+      localStorage.removeItem("flights");
+      updateFlightList();
+      document.getElementById("results").innerHTML = "";
     }
 
     function calculate() {
@@ -256,13 +232,14 @@ function clearFlights() {
         resultList.appendChild(li);
       }
     }
-  
+
     document.getElementById("longlayover").addEventListener("change", function() {
       const isChecked = this.checked;
       document.getElementById("destination").disabled = isChecked;
       document.getElementById("duration").disabled = isChecked;
     });
-loadFlights();
-</script>
+
+    loadFlights();
+  </script>
 </body>
 </html>
